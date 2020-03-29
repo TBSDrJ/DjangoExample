@@ -29,7 +29,7 @@ from django.contrib.auth.models import User
     #     postStr += "\n"
     #     return postStr
 
-class PostTemp(models.Model):
+class Post(models.Model):
     """
     Creating this model to replace the old Post model.
 
