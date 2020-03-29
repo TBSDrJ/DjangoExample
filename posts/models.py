@@ -7,13 +7,13 @@ from django.contrib.auth.models import User
 
 class Post(models.Model):
     """
-    Creating this model to replace the old Post model.
+    This model will contain the posts to the Twit platform.
 
-    Trying to switch userPosted from a character field that stores the
-    username to a ForiegnKey field that links to the User object.
+    It is an update of an earlier version that used just the username of
+    the poster in userPosted instead of the User object.
     """
     postText = models.CharField(max_length=280)
-    # This matches up with the 'username' field of the built-in User model.
+    # This links to the built-in User model.
     userPosted = models.ForeignKey(User, on_delete=models.CASCADE)
     pubDate = models.DateTimeField('date published')
     likes = models.IntegerField(default=0)
