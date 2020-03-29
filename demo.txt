@@ -1,0 +1,4 @@
+trailing slash on URLs
+in views, move <int:id> after <username>
+test queries in shell -- return object?
+with/without '' path in twit urls (create user with username twit?)

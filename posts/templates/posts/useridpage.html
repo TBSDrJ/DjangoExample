@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <title>User id: {{userid}}'s Twit Page</title>
+
+    <!-- This section (4 items) includes Bootstrap 4 -->
+      <!-- Latest compiled and minified CSS -->
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" />
+      <!-- jQuery library -->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <!-- Popper JS -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+      <!-- Latest compiled JavaScript -->
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+    <!-- Need this in the head to load static resources -->
+    {% load static %}
+
+  </head>
+
+  <!-- Again, very light gray background for page. -->
+  <body bgcolor="#111144">
+
+    <!-- This page isn't fully developed yet.  I'd make it match the username page
+      more if/when I get around to it. -->
+    <div class="container">
+
+      <!-- First, check if there are any posts by this user. -->
+      {% if latestPosts %}
+      
+        <!-- If so, display them. -->
+        {% for post in latestPosts %}
+          <div class="row border border-dark">
+            <div class="col-1" align=center><img src="{% static 'posts/DrJAvatar.png' %}" height=50></div>
+            <div class="col-11 font-weight-bold bg-info text-danger">
+              {{ username }}: {{ firstName }} {{ lastName }}
+              <div class="row">
+                <div class="col-1">&nbsp;</div>
+                <div class="col-11 font-weight-normal text-dark">{{ post.postText }}</div>
+              </div>
+              <div class="row">
+                <div class="col font-weight-normal text-warning"><small>{{ post.pubDate }}</small></div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+
+      <!-- Otherwise, let the viewer know that we've tried and there's nothing there. -->
+      {% else %}
+        <div class="row">
+          <div class="col">Sorry, no posts available.</div>
+        </div>
+      {% endif %}
+    </div>
+
+  </body>
+</html

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Dr. J's Twit Page</title>
+
+    <!-- This section (4 items) includes Bootstrap 4 -->
+      <!-- Latest compiled and minified CSS -->
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" />
+      <!-- jQuery library -->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <!-- Popper JS -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+      <!-- Latest compiled JavaScript -->
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+  </head>
+
+  <!-- Make the background a very light gray.  -->
+  <body bgcolor="#111144">
+
+    <!-- With Bootstrap 4, everything should be in a container. -->
+    <div class="container">
+      <h1>Welcome to Twit!</h1>
+
+      <!-- Here, we check if someone is logged in or not.  I created the
+        'loggedIn' variable as a Boolean flag: it is easy to check in Python,
+        a little less obvious how to do so in the HTML template.  -->
+      {% if loggedIn %}
+
+        <!-- If someone is logged in, we welocme them and give them <thead>
+          opportunity to log out. -->
+        <h3>Welcome, {{ user.first_name }} {{ user.last_name }}</h3>
+
+        <!-- Use POST for sure any time you are dealing with login/logout info.
+          In general, you should use POST unless you have a good reason not to.
+          The main reason to use GET instead is if you want the input data to be
+          transfereable in the URL; GET puts all data submissions in the URL. -->
+        <form style="padding-bottom:1em;" method="POST">
+          <!-- Every <form> element needs a csrf_token as a security precaution. -->
+          {% csrf_token %}
+          <!-- I use the hidden input element to send along the information that
+            we are logging out. -->
+          <input type="hidden" name="logout" value="logout"></input>
+          <button type="submit" class="btn btn-danger">Logout</button>
+        </form>
+
+      <!-- If no user is logged in, give them a chance to do so. -->
+      {% else %}
+
+        <!-- Again, use POST method, and include a csrf_token -->
+        <form style="padding-bottom:1em;" method="POST">
+          {% csrf_token %}
+
+          <!-- Give the user a place to type in their name and passowrd. -->
+          <div class="form-group">
+            <label for="inputUsername">Username</label>
+            <input type="text" class="form-control" name="inputUsername" id="inputUsername" />
+          </div>
+
+          <!-- Notice that we use password as the <input> type so that it blocks
+            out the characters as you type; otherwise, it is just a text box. -->
+          <div class="form-group">
+            <label for="inputPassword">Password</label>
+            <input type="password" class="form-control" name="inputPassword" id="inputPassword" />
+          </div>
+
+          <!-- Bootstrap likes <button> elements with type="submit" instead
+            <input> elements with type="submit" -->
+          <button type="submit" class="btn btn-danger">Login</button>
+        </form>
+      {% endif %}
+      <!-- End login/logout section. -->
+
+      <!-- I decided to just dump all posts onto the screen here. -->
+      <!-- This block repeats once for each post in the list. -->
+      {% for post in allPosts %}
+
+        <!-- Each post gets its own row with a border in the Bootstrap grid. -->
+        <div class="row border border-dark">
+
+          <!-- I've tried to use a mostly consistent look for the posts across
+            the different views.  I keep the text colors the same and change
+            only the background color of the post so I can tell which view I'm in. -->
+          <div class="col-3 text-primary">
+            <strong>
+              {{ post.firstName }} {{ post.lastName }}:
+            </strong>
+          </div>
+          <div class="col-5 text-dark">
+            {{ post.postText }}
+          </div>
+          <div class="col-2 text-success">
+            <small>{{ post.pubDate }}</small>
+          </div>
+          <div class="col-2 text-danger">
+            <!-- The heart here is a Unicode character.  I tried to embed it using
+              the Hex code, but it didn't work for some reason, but Atom took the
+              character no problem on a copy-and-paste from unicode-table.com -->
+            <small>❤ {{ post.likes }}</small>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </body>
+</html
