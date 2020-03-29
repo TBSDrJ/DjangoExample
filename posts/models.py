@@ -3,6 +3,7 @@
 ### Django version 3.0.3
 
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Post(models.Model):
@@ -27,3 +28,16 @@ class Post(models.Model):
         postStr += "\n\t" + "Date Published: " + str(self.pubDate)
         postStr += "\n"
         return postStr
+
+class PostTemp(models.Model):
+    """
+    Creating this model to replace the old Post model.
+
+    Trying to switch userPosted from a character field that stores the
+    username to a ForiegnKey field that links to the User object.
+    """
+    postText = models.CharField(max_length=280)
+    # This matches up with the 'username' field of the built-in User model.
+    userPosted = models.ForeignKey(User, on_delete=models.CASCADE)
+    pubDate = models.DateTimeField('date published')
+    likes = models.IntegerField(default=0)
