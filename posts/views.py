@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.template import loader
 # Custom imports added
 # Add my model
-from .models import Post
+from .models import PostTemp
 # Need timezone for date/time published
 from django.utils import timezone
 # These are needed for user authentication and persistence
@@ -45,11 +45,11 @@ def index(request):
     # Find the template
     template = loader.get_template('posts/index.html')
     # The home page will show *all* posts for now.
-    allPosts = Post.objects.order_by('-pubDate')
+    allPosts = PostTemp.objects.order_by('-pubDate')
     # The Post model only contains the username, so we go and fetch the
     # first and last names from the User model and add that information.
     for post in allPosts:
-        poster = User.objects.filter(username = post.userPosted)[0]
+        poster = post.userPosted
         post.firstName = poster.first_name
         post.lastName = poster.last_name
     # Now all the data is ready to pass to the template so set up the context.
@@ -94,7 +94,7 @@ def usernamepage(request, username):
             }
         return HttpResponse(template.render(context, request))
     # Get all the posts for this user only *after* we've added the new one if that happened.
-    myPosts = Post.objects.filter(userPosted = username)
+    myPosts = PostTemp.objects.filter(userPosted = userInfo.id)
     # Now, cut this down to the most recent and put in order
     latestPosts = myPosts.order_by('-pubDate')[:5]
     # Go find the template
@@ -124,7 +124,7 @@ def useridpage(request, id):
             }
         return HttpResponse(template.render(context, request))
     # Find the user's posts
-    myPosts = Post.objects.filter(userPosted = thisUser.username)
+    myPosts = PostTemp.objects.filter(userPosted = id)
     # Grab the most recent five
     latestPosts = myPosts.order_by('-pubDate')[:5]
     # Find the data
