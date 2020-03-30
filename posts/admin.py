@@ -4,6 +4,7 @@
 
 from django.contrib import admin
 # I didn't do much with this, I just imported my one model
-from .models import Post
+from .models import Post, Profile
 
 admin.site.register(Post)
+admin.site.register(Profile)
