@@ -47,3 +47,25 @@ class Profile(models.Model):
     #   c.f.: https://docs.djangoproject.com/en/3.0/ref/models/fields/#django.db.models.Field.null
     bio = models.TextField(default="", blank=True)
     location = models.CharField(max_length=100, default="", blank=True)
+
+class Following(models.Model):
+    """
+    This model will allow us to track followers for each user.
+    """
+    follower = models.ForeignKey(
+        User,
+        on_delete = models.CASCADE,
+        null = True,
+        related_name = 'follower',
+    )
+    followed = models.ForeignKey(
+        User,
+        on_delete = models.CASCADE,
+        null = True,
+        related_name = 'followed',
+    )
+
+    def __str__(self):
+        followStr = self.follower.username + " is following "
+        followStr += self.followed.username
+        return followStr
