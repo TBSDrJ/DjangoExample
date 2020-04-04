@@ -122,13 +122,13 @@ def usernamepage(request, username):
             # Load up the data into a context.
             context = {
                 'latestPosts': latestPosts,
-                'username': userInfo.username,
-                'firstName': userInfo.first_name,
-                'lastName': userInfo.last_name,
-                'user': username,
+                'username': userInfo.username, # whose page we're on
+                'firstName': userInfo.first_name, # whose page we're on
+                'lastName': userInfo.last_name, # whose page we're on
+                'user': username, # whose page we're on
                 'isPageOwner': False,
                 'loggedIn': True,
-                'whoIsIt': request.user.username,
+                'whoIsIt': request.user.username, # who is logged in
                 }
             # And go!
             return HttpResponse(template.render(context, request))
