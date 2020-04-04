@@ -150,33 +150,3 @@ def usernamepage(request, username):
             }
         # And go!
         return HttpResponse(template.render(context, request))
-
-def useridpage(request, id):
-    # Find the user
-    thisUser = User.objects.filter(id=id)
-    # Check if we found something.
-    # If not, show an error page.
-    try:
-        userInfo = User.objects.filter(id=id)[0]
-    except:
-        template = loader.get_template('posts/nosuchuserid.html')
-        context = {
-            'userid': id,
-            }
-        return HttpResponse(template.render(context, request))
-    # Find the user's posts
-    myPosts = Post.objects.filter(userPosted = id)
-    # Grab the most recent five
-    latestPosts = myPosts.order_by('-pubDate')[:5]
-    # Find the data
-    template = loader.get_template('posts/useridpage.html')
-    # Line up the data for the context
-    context = {
-        'latestPosts': latestPosts,
-        'userid': userInfo.id,
-        'username': userInfo.username,
-        'firstName': userInfo.first_name,
-        'lastName': userInfo.last_name,
-        }
-    # And go!
-    return HttpResponse(template.render(context, request))
