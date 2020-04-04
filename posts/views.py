@@ -112,7 +112,24 @@ def usernamepage(request, username):
             return HttpResponse(template.render(context, request))
         else:
             # Authenticated, but looking at someone else's page
-            pass
+
+            # Get all of this user's posts
+            userPosts = Post.objects.filter(userPosted = userInfo.id)
+            # Now, cut this down to the most recent and put in order
+            latestPosts = userPosts.order_by('-pubDate')[:5]
+            # Go find the template
+            template = loader.get_template('posts/usernamepage.html')
+            # Load up the data into a context.
+            context = {
+                'latestPosts': latestPosts,
+                'username': userInfo.username,
+                'firstName': userInfo.first_name,
+                'lastName': userInfo.last_name,
+                'user': username,
+                'isPageOwner': False,
+                }
+            # And go!
+            return HttpResponse(template.render(context, request))
     else:
         # Not authenticated at all.
         pass
