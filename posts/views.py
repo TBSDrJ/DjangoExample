@@ -151,6 +151,7 @@ def usernamepage(request, username):
             'lastName': userInfo.last_name,
             'user': username,
             'isPageOwner': False,
+            'loggedIn': False,
             }
         # And go!
         return HttpResponse(template.render(context, request))

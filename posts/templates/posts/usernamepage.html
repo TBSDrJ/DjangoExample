@@ -92,6 +92,12 @@
               Go To My Home Page
             </button>
           </a>
+        {% else %}
+          <a href="{% url 'index' %}">
+            <button type="submit" class="btn btn-danger">
+              Login
+            </button>
+          </a>
         {% endif %}
       {% else %}
         <div class="row">
