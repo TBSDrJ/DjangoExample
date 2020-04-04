@@ -28,5 +28,4 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('admin', admin.site.urls),
     path('', include('posts.urls')),
-    path('twit/', include('posts.urls')),
 ]
