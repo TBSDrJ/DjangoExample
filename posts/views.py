@@ -55,6 +55,8 @@ def index(request):
         'loggedIn': loggedIn,
         'user': request.user,
         }
+    if loggedIn:
+        context['whoIsIt'] = request.user.username
     # And go!
     return HttpResponse(template.render(context, request))
 
@@ -66,8 +68,8 @@ def usernamepage(request, username):
     # Use the Pretty Printer to make this giant mess vaguely readable.
     # Notice that the vars() function means I see *all* of the dictionary
     #   instead of just the __str()__ method version of it.
-    pp = pprint.PrettyPrinter(indent=2)
-    pp.pprint(vars(request))
+    # pp = pprint.PrettyPrinter(indent=2)
+    # pp.pprint(vars(request))
 
     # Make sure that this user exists before we get the user info.
     # Show error page if user does not exist.
@@ -127,6 +129,8 @@ def usernamepage(request, username):
                 'lastName': userInfo.last_name,
                 'user': username,
                 'isPageOwner': False,
+                'loggedIn': True,
+                'whoIsIt': request.user.username,
                 }
             # And go!
             return HttpResponse(template.render(context, request))

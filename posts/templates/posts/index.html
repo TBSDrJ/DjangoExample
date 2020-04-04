@@ -45,6 +45,11 @@
           <button type="submit" class="btn btn-danger">Logout</button>
         </form>
 
+        <a href="{% url 'usernamepage' whoIsIt %}">
+          <button type="submit" class="btn btn-primary">
+            Go To My Home Page
+          </button>
+        </a>
       <!-- If no user is logged in, give them a chance to do so. -->
       {% else %}
 
