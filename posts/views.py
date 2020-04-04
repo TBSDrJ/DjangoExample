@@ -66,20 +66,9 @@ def usernamepage(request, username):
     # Use the Pretty Printer to make this giant mess vaguely readable.
     # Notice that the vars() function means I see *all* of the dictionary
     #   instead of just the __str()__ method version of it.
-    # pp = pprint.PrettyPrinter(indent=2)
-    # pp.pprint(vars(request))
+    pp = pprint.PrettyPrinter(indent=2)
+    pp.pprint(vars(request))
 
-    # This page has a form to add a post that redirects to itself, so check if
-    #   that form was filled out or not.
-    if request.POST:
-        # Create an instance of the Post object.
-        newPost = Post(
-            postText = request.POST['newPostText'],
-            userPosted = request.POST['userPosting'],
-            pubDate = timezone.now(),
-            )
-        # Save to the database.
-        newPost.save()
     # Make sure that this user exists before we get the user info.
     # Show error page if user does not exist.
     try:
@@ -90,22 +79,42 @@ def usernamepage(request, username):
             'username': username,
             }
         return HttpResponse(template.render(context, request))
-    # Get all the posts for this user only *after* we've added the new one if that happened.
-    myPosts = Post.objects.filter(userPosted = userInfo.id)
-    # Now, cut this down to the most recent and put in order
-    latestPosts = myPosts.order_by('-pubDate')[:5]
-    # Go find the template
-    template = loader.get_template('posts/usernamepage.html')
-    # Load up the data into a context.
-    context = {
-        'latestPosts': latestPosts,
-        'username': userInfo.username,
-        'firstName': userInfo.first_name,
-        'lastName': userInfo.last_name,
-        'user': username,
-        }
-    # And go!
-    return HttpResponse(template.render(context, request))
+    if request.user.is_authenticated:
+        # Check if the authenticated user is looking at their own page.
+        if request.user.username == username:
+            # This page has a form to add a post that redirects to itself, so
+            #   check if that form was filled out or not.
+            if request.POST:
+                # Create an instance of the Post object.
+                newPost = Post(
+                    postText = request.POST['newPostText'],
+                    userPosted = request.POST['userPosting'],
+                    pubDate = timezone.now(),
+                    )
+                # Save to the database.
+                newPost.save()
+            # Get all the posts for this user only *after* we've added the new one if that happened.
+            myPosts = Post.objects.filter(userPosted = userInfo.id)
+            # Now, cut this down to the most recent and put in order
+            latestPosts = myPosts.order_by('-pubDate')[:5]
+            # Go find the template
+            template = loader.get_template('posts/usernamepage.html')
+            # Load up the data into a context.
+            context = {
+                'latestPosts': latestPosts,
+                'username': userInfo.username,
+                'firstName': userInfo.first_name,
+                'lastName': userInfo.last_name,
+                'user': username,
+                }
+            # And go!
+            return HttpResponse(template.render(context, request))
+        else:
+            # Authenticated, but looking at someone else's page
+            pass
+    else:
+        # Not authenticated at all.
+        pass
 
 def useridpage(request, id):
     # Find the user
