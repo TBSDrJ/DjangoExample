@@ -24,48 +24,48 @@
     <!-- Bootstrap wants everything in some kind of container. -->
     <div class="container">
 
-      <!-- I'm using a pagination nav from Bootstrap to switch views. -->
-      <nav>
+      {% if isPageOwner %}
+        <!-- I'm using a pagination nav from Bootstrap to switch views. -->
+        <nav>
 
-        <!-- I made it large, and centered left-to-right (see avatar below). -->
-        <ul class="pagination pagination-lg justify-content-center">
+          <!-- I made it large, and centered left-to-right (see avatar below). -->
+          <ul class="pagination pagination-lg justify-content-center">
 
-          <!-- There are only two options, posts my this user only, -->
-          <li class="page-item">
-            <a class="page-link" href="">My Posts</a>
-          </li>
+            <!-- There are only two options, posts my this user only, -->
+            <li class="page-item">
+              <a class="page-link" href="">My Posts</a>
+            </li>
 
-          <!-- or posts by whoever this user follows. -->
-          <li class="page-item border-dark">
-            <a class="page-link" href="{% url 'followed' username %}">My Feed</a>
-          </li>
-        </ul>
-      </nav>
+            <!-- or posts by whoever this user follows. -->
+            <li class="page-item border-dark">
+              <a class="page-link" href="{% url 'followed' username %}">My Feed</a>
+            </li>
+          </ul>
+        </nav>
+      {% endif %}
 
-      <!-- Thi section sets up a form where a user can make a new post. -->
-      <div class="row border border-dark">
-        <div class="col">
-          {% if user %}
-          <form action="{% url 'usernamepage' username %}" method="POST">
-            {% csrf_token %}
-            <div class="form-group">
-              <div class="col-8">
-                <label for="newPostText">Add a New Post!</label>
-                <textarea class="form-control" rows="4" name="newPostText"></textarea>
+      <!-- This section sets up a form where a user can make a new post. -->
+      {% if isPageOwner %}
+        <div class="row border border-dark">
+          <div class="col">
+            <form action="{% url 'usernamepage' username %}" method="POST">
+              {% csrf_token %}
+              <div class="form-group">
+                <div class="col-8">
+                  <label for="newPostText">Add a New Post!</label>
+                  <textarea class="form-control" rows="4" name="newPostText"></textarea>
+                </div>
               </div>
-            </div>
-            <div class="form-group">
-              <div class="col-12">
-                <input type="hidden" name="userPosting" value="{{ username }}" />
-                <button type="submit" class="btn btn-success">Submit New Post</button>
+              <div class="form-group">
+                <div class="col-12">
+                  <input type="hidden" name="userPosting" value="{{ username }}" />
+                  <button type="submit" class="btn btn-success">Submit New Post</button>
+                </div>
               </div>
-            </div>
-          </form>
-          {% else %}
-            <p>Log in to post.</p>
-          {% endif %}
+            </form>
+          </div>
         </div>
-      </div>
+      {% endif %}
 
       {% if latestPosts %}
         {% for post in latestPosts %}

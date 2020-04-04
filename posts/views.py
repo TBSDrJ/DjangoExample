@@ -106,6 +106,7 @@ def usernamepage(request, username):
                 'firstName': userInfo.first_name,
                 'lastName': userInfo.last_name,
                 'user': username,
+                'isPageOwner': True,
                 }
             # And go!
             return HttpResponse(template.render(context, request))
