@@ -55,8 +55,6 @@ def index(request):
         'loggedIn': loggedIn,
         'user': request.user,
         }
-    if loggedIn:
-        context['whoIsIt'] = request.user.username
     # And go!
     return HttpResponse(template.render(context, request))
 
