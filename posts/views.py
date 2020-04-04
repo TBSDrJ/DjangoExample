@@ -38,10 +38,7 @@ def index(request):
             # If so, don't need to check anything else, just kill the session.
             logout(request)
     # After we check the forms, set a flag for use in the template.
-    if request.user.is_authenticated:
-        loggedIn = True
-    else:
-        loggedIn = False
+    loggedIn = request.user.is_authenticated
     # Find the template
     template = loader.get_template('posts/index.html')
     # The home page will show *all* posts for now.
