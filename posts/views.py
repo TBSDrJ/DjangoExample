@@ -59,12 +59,22 @@ def index(request):
     return HttpResponse(template.render(context, request))
 
 def followed(request, username):
+    # Make sure that this user exists before we get the user info.
+    # Show error page if user does not exist.
+    try:
+        thisUser = User.objects.get(username=username)
+    except:
+        template = loader.get_template('posts/nosuchusername.html')
+        context = {
+            'username': username,
+            }
+        return HttpResponse(template.render(context, request))
+    template = loader.get_template('posts/followed.html')
     # Check if anyone is logged in
     if request.user.is_authenticated:
         # If logged in, check if that user is looking at their own page
         if request.user.username == username:
             # Get list of people who this user follows
-            thisUser = User.objects.get(username = username)
             follows = Following.objects.filter(follower = thisUser)
             # Get their posts
             followedPosts = []
@@ -74,8 +84,14 @@ def followed(request, username):
             # Put them in order by date posted
             followedPosts = sorted(followedPosts,
                 key=lambda post: post.pubDate)
-            print(followedPosts)
-    return HttpResponse("Followed Page")
+            followedPosts.reverse()
+            context = {
+                'thisUser': thisUser,
+                'followedPosts': followedPosts,
+                'loggedIn': True,
+                'isPageOwner': True,
+            }
+    return HttpResponse(template.render(context, request))
 
 def usernamepage(request, username):
     # Use the Pretty Printer to make this giant mess vaguely readable.

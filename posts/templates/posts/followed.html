@@ -2,7 +2,7 @@
 <html>
   <head>
 
-    <title>{{ userInfo.username }}'s Twit Page</title>
+    <title>{{ thisUser.username }}'s Twit Page</title>
 
     <!-- This section (4 items) includes Bootstrap 4 -->
       <!-- Latest compiled and minified CSS -->
@@ -33,12 +33,12 @@
 
             <!-- There are only two options, posts my this user only, -->
             <li class="page-item">
-              <a class="page-link" href="">My Posts</a>
+              <a class="page-link" href="{% url 'usernamepage' thisUser.username %}">My Posts</a>
             </li>
 
             <!-- or posts by whoever this user follows. -->
             <li class="page-item border-dark">
-              <a class="page-link" href="{% url 'followed' userInfo.username %}">My Feed</a>
+              <a class="page-link" href="">My Feed</a>
             </li>
           </ul>
         </nav>
@@ -48,7 +48,7 @@
       <div class="row border border-dark">
         <div class="col">
           {% if isPageOwner %}
-            <form action="{% url 'usernamepage' userInfo.username %}" method="POST">
+            <form action="{% url 'followed' thisUser.username %}" method="POST">
               {% csrf_token %}
               <div class="form-group">
                 <div class="col-8">
@@ -58,29 +58,29 @@
               </div>
               <div class="form-group">
                 <div class="col-12">
-                  <input type="hidden" name="userPosting" value="{{ userInfo.username }}" />
+                  <input type="hidden" name="userPosting" value="{{ thisUser.username }}" />
                   <button type="submit" class="btn btn-success">Submit New Post</button>
                 </div>
               </div>
             </form>
           {% else %}
-            <h2>{{ userInfo.first_name }} {{ userInfo.last_name }}'s Posts</h2>
+            <h2>{{ thisUser.first_name }} {{ thisUser.last_name }}'s Reading List</h2>
           {% endif %}
         </div>
       </div>
 
-      {% if latestPosts %}
-        {% for post in latestPosts %}
+      {% if followedPosts %}
+        {% for post in followedPosts %}
           <div class="row border border-dark">
             <div class="d-flex col-1 align-items-center justify-content-center" align=center><img src="{% static 'posts/DrJAvatar.png' %}" height=50/></div>
-            <div class="col-11 font-weight-bold bg-warning text-primary">
-              {{ userInfo.first_name }} {{ userInfo.last_name }}
+            <div class="col-11 font-weight-bold bg-info text-light">
+              {{ post.userPosted.first_name }} {{ post.userPosted.last_name }}
               <div class="row">
                 <div class="col-1">&nbsp;</div>
                 <div class="col-11 font-weight-normal text-dark">{{ post.postText }}</div>
               </div>
               <div class="row">
-                <div class="col font-weight-normal text-success"><small>{{ post.pubDate }}</small></div>
+                <div class="col font-weight-normal text-warning"><small>{{ post.pubDate }}</small></div>
                 <div class="col font-weight-normal text-danger">❤ {{ post.likes }}</div>
               </div>
             </div>
