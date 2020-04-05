@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <title>{{ userInfo.username }}'s Twit Page</title>
+
+    <!-- This section (4 items) includes Bootstrap 4 -->
+      <!-- Latest compiled and minified CSS -->
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" />
+      <!-- jQuery library -->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <!-- Popper JS -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+      <!-- Latest compiled JavaScript -->
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+    <!-- Need this in the head to load static resources -->
+    {% load static %}
+
+  </head>
+
+  <!-- Again, light gray page background. -->
+  <body bgcolor="#111144">
+    <!-- Bootstrap wants everything in some kind of container. -->
+    <div class="container">
+
+      {% if isPageOwner %}
+        <!-- I'm using a pagination nav from Bootstrap to switch views. -->
+        <nav>
+
+          <!-- I made it large, and centered left-to-right (see avatar below). -->
+          <ul class="pagination pagination-lg justify-content-center">
+
+            <!-- There are only two options, posts my this user only, -->
+            <li class="page-item">
+              <a class="page-link" href="">My Posts</a>
+            </li>
+
+            <!-- or posts by whoever this user follows. -->
+            <li class="page-item border-dark">
+              <a class="page-link" href="{% url 'followed' userInfo.username %}">My Feed</a>
+            </li>
+          </ul>
+        </nav>
+      {% endif %}
+
+      <!-- This section sets up a form where a user can make a new post. -->
+      <div class="row border border-dark">
+        <div class="col">
+          {% if isPageOwner %}
+            <form action="{% url 'usernamepage' userInfo.username %}" method="POST">
+              {% csrf_token %}
+              <div class="form-group">
+                <div class="col-8">
+                  <label for="newPostText">Add a New Post!</label>
+                  <textarea class="form-control" rows="4" name="newPostText"></textarea>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-12">
+                  <input type="hidden" name="userPosting" value="{{ userInfo.username }}" />
+                  <button type="submit" class="btn btn-success">Submit New Post</button>
+                </div>
+              </div>
+            </form>
+          {% else %}
+            <h2>{{ userInfo.first_name }} {{ userInfo.last_name }}'s Posts</h2>
+          {% endif %}
+        </div>
+      </div>
+
+      {% if latestPosts %}
+        {% for post in latestPosts %}
+          <div class="row border border-dark">
+            <div class="d-flex col-1 align-items-center justify-content-center" align=center><img src="{% static 'posts/DrJAvatar.png' %}" height=50/></div>
+            <div class="col-11 font-weight-bold bg-warning text-primary">
+              {{ userInfo.first_name }} {{ userInfo.last_name }}
+              <div class="row">
+                <div class="col-1">&nbsp;</div>
+                <div class="col-11 font-weight-normal text-dark">{{ post.postText }}</div>
+              </div>
+              <div class="row">
+                <div class="col font-weight-normal text-success"><small>{{ post.pubDate }}</small></div>
+                <div class="col font-weight-normal text-danger">❤ {{ post.likes }}</div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+        {% if not isPageOwner %}
+          {% if loggedIn %}
+            <a href="{% url 'usernamepage' whoIsIt %}">
+              <button type="submit" class="btn btn-danger">
+                Go To My Home Page
+              </button>
+            </a>
+          {% else %}
+            <a href="{% url 'index' %}">
+              <button type="submit" class="btn btn-danger">
+                Login
+              </button>
+            </a>
+          {% endif %}
+        {% endif %}
+      {% else %}
+        <div class="row">
+          <div class="col">Sorry, no posts available.</div>
+        </div>
+      {% endif %}
+    </div>
+  </body>
+</html
