@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.template import loader
 # Custom imports added
 # Add my model
-from .models import Post
+from .models import Post, Following
 # Need timezone for date/time published
 from django.utils import timezone
 # These are needed for user authentication and persistence
@@ -59,7 +59,22 @@ def index(request):
     return HttpResponse(template.render(context, request))
 
 def followed(request, username):
-    # Early stage of development
+    # Check if anyone is logged in
+    if request.user.is_authenticated:
+        # If logged in, check if that user is looking at their own page
+        if request.user.username == username:
+            # Get list of people who this user follows
+            thisUser = User.objects.get(username = username)
+            follows = Following.objects.filter(follower = thisUser)
+            # Get their posts
+            followedPosts = []
+            for follow in follows:
+                followed = User.objects.get(username = follow.followed)
+                followedPosts += Post.objects.filter(userPosted = followed)
+            # Put them in order by date posted
+            followedPosts = sorted(followedPosts,
+                key=lambda post: post.pubDate)
+            print(followedPosts)
     return HttpResponse("Followed Page")
 
 def usernamepage(request, username):
@@ -99,6 +114,7 @@ def usernamepage(request, username):
             latestPosts = myPosts.order_by('-pubDate')[:5]
             # Go find the template
             template = loader.get_template('posts/usernamepage.html')
+
             # Load up the data into a context.
             context = {
                 'latestPosts': latestPosts,
@@ -113,7 +129,7 @@ def usernamepage(request, username):
         else:
             # Authenticated, but looking at someone else's page
 
-            # Get all of this user's posts
+            # Get all of this user's posts (user whose page we're on)
             userPosts = Post.objects.filter(userPosted = userInfo.id)
             # Now, cut this down to the most recent and put in order
             latestPosts = userPosts.order_by('-pubDate')[:5]
