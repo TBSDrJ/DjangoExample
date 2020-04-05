@@ -91,7 +91,8 @@ def followed(request, username):
                 'loggedIn': True,
                 'isPageOwner': True,
             }
-    return HttpResponse(template.render(context, request))
+            return HttpResponse(template.render(context, request))
+    return HttpResponse("You do not have permission to view this page.")
 
 def usernamepage(request, username):
     # Use the Pretty Printer to make this giant mess vaguely readable.
@@ -119,7 +120,7 @@ def usernamepage(request, username):
                 # Create an instance of the Post object.
                 newPost = Post(
                     postText = request.POST['newPostText'],
-                    userPosted = request.POST['userPosting'],
+                    userPosted = userInfo,
                     pubDate = timezone.now(),
                     )
                 # Save to the database.
