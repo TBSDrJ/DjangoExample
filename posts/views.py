@@ -87,7 +87,7 @@ def usernamepage(request, username):
     # Make sure that this user exists before we get the user info.
     # Show error page if user does not exist.
     try:
-        userInfo = User.objects.filter(username=username)[0]
+        userInfo = User.objects.get(username=username)
     except:
         template = loader.get_template('posts/nosuchusername.html')
         context = {
@@ -118,11 +118,9 @@ def usernamepage(request, username):
             # Load up the data into a context.
             context = {
                 'latestPosts': latestPosts,
-                'username': userInfo.username,
-                'firstName': userInfo.first_name,
-                'lastName': userInfo.last_name,
-                'user': username,
+                'userInfo': userInfo,
                 'isPageOwner': True,
+                'loggedIn': True
                 }
             # And go!
             return HttpResponse(template.render(context, request))
@@ -138,10 +136,7 @@ def usernamepage(request, username):
             # Load up the data into a context.
             context = {
                 'latestPosts': latestPosts,
-                'username': userInfo.username, # whose page we're on
-                'firstName': userInfo.first_name, # whose page we're on
-                'lastName': userInfo.last_name, # whose page we're on
-                'user': username, # whose page we're on
+                'userInfo': userInfo, # whose page we're on
                 'isPageOwner': False,
                 'loggedIn': True,
                 'whoIsIt': request.user.username, # who is logged in
@@ -160,10 +155,7 @@ def usernamepage(request, username):
         # Load up the data into a context.
         context = {
             'latestPosts': latestPosts,
-            'username': userInfo.username,
-            'firstName': userInfo.first_name,
-            'lastName': userInfo.last_name,
-            'user': username,
+            'userInfo': userInfo,
             'isPageOwner': False,
             'loggedIn': False,
             }

@@ -2,7 +2,7 @@
 <html>
   <head>
 
-    <title>{{username}}'s Twit Page</title>
+    <title>{{ userInfo.username }}'s Twit Page</title>
 
     <!-- This section (4 items) includes Bootstrap 4 -->
       <!-- Latest compiled and minified CSS -->
@@ -38,7 +38,7 @@
 
             <!-- or posts by whoever this user follows. -->
             <li class="page-item border-dark">
-              <a class="page-link" href="{% url 'followed' username %}">My Feed</a>
+              <a class="page-link" href="{% url 'followed' userInfo.username %}">My Feed</a>
             </li>
           </ul>
         </nav>
@@ -48,7 +48,7 @@
       <div class="row border border-dark">
         <div class="col">
           {% if isPageOwner %}
-            <form action="{% url 'usernamepage' username %}" method="POST">
+            <form action="{% url 'usernamepage' userInfo.username %}" method="POST">
               {% csrf_token %}
               <div class="form-group">
                 <div class="col-8">
@@ -58,13 +58,13 @@
               </div>
               <div class="form-group">
                 <div class="col-12">
-                  <input type="hidden" name="userPosting" value="{{ username }}" />
+                  <input type="hidden" name="userPosting" value="{{ userInfo.username }}" />
                   <button type="submit" class="btn btn-success">Submit New Post</button>
                 </div>
               </div>
             </form>
           {% else %}
-            <h2>{{ firstName }} {{ lastName }}'s Posts</h2>
+            <h2>{{ userInfo.first_name }} {{ userInfo.last_name }}'s Posts</h2>
           {% endif %}
         </div>
       </div>
@@ -74,7 +74,7 @@
           <div class="row border border-dark">
             <div class="d-flex col-1 align-items-center justify-content-center" align=center><img src="{% static 'posts/DrJAvatar.png' %}" height=50/></div>
             <div class="col-11 font-weight-bold bg-warning text-primary">
-              {{ firstName }} {{ lastName }}
+              {{ userInfo.first_name }} {{ userInfo.last_name }}
               <div class="row">
                 <div class="col-1">&nbsp;</div>
                 <div class="col-11 font-weight-normal text-dark">{{ post.postText }}</div>
@@ -86,18 +86,20 @@
             </div>
           </div>
         {% endfor %}
-        {% if loggedIn %}
-          <a href="{% url 'usernamepage' whoIsIt %}">
-            <button type="submit" class="btn btn-danger">
-              Go To My Home Page
-            </button>
-          </a>
-        {% else %}
-          <a href="{% url 'index' %}">
-            <button type="submit" class="btn btn-danger">
-              Login
-            </button>
-          </a>
+        {% if not isPageOwner %}
+          {% if loggedIn %}
+            <a href="{% url 'usernamepage' whoIsIt %}">
+              <button type="submit" class="btn btn-danger">
+                Go To My Home Page
+              </button>
+            </a>
+          {% else %}
+            <a href="{% url 'index' %}">
+              <button type="submit" class="btn btn-danger">
+                Login
+              </button>
+            </a>
+          {% endif %}
         {% endif %}
       {% else %}
         <div class="row">
