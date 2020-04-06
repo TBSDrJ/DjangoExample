@@ -7,7 +7,7 @@ from . import views
 
 # I might get rid of loading up user pages by ID, it really is not necesary.
 urlpatterns = [
-    path('', views.index, name="index"),
-    path('<username>/followed', views.followed, name="followed"),
-    path('<username>', views.usernamepage, name="usernamepage"),
+    path('', views.IndexView.as_view(), name="index"),
+    path('<username>/followed', views.FollowedView.as_view(), name="followed"),
+    path('<username>', views.UsernameView.as_view(), name="username"),
 ]
