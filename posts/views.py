@@ -12,11 +12,13 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 
 class IndexView(View):
+    allPosts = Post.objects.order_by("-pubDate")
 
     def get(self, request):
         form = AuthenticationForm()
         context = {
             'form': form,
+            'allPosts': self.allPosts,
         }
         return render(request, 'posts/index.html', context)
     def post(self, request):
@@ -29,6 +31,7 @@ class IndexView(View):
                 login(request, user = user)
         context = {
             'form': form,
+            'allPosts': self.allPosts,
         }
         return render(request, 'posts/index.html', context)
 

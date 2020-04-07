@@ -66,17 +66,17 @@
 
       <!-- I decided to just dump all posts onto the screen here. -->
       <!-- This block repeats once for each post in the list. -->
-      <!-- {% for post in allPosts %} -->
+      {% for post in allPosts %}
 
         <!-- Each post gets its own row with a border in the Bootstrap grid. -->
-        <!-- <div class="row border border-dark"> -->
+        <div class="row border border-dark">
 
           <!-- I've tried to use a mostly consistent look for the posts across
-            the different views.  I keep the text colors the same and change
-            only the background color of the post so I can tell which view I'm in. -->
-          <!-- <div class="col-3 text-primary">
+            the different views, but I'm changing some colors so I can tell
+            which view I'm in. -->
+          <div class="col-3 text-primary">
             <strong>
-              {{ post.firstName }} {{ post.lastName }}:
+              {{ post.userPosted.first_name }} {{ post.userPosted.last_name }}:
             </strong>
           </div>
           <div class="col-5 text-dark">
@@ -85,14 +85,15 @@
           <div class="col-2 text-success">
             <small>{{ post.pubDate }}</small>
           </div>
-          <div class="col-2 text-danger"> -->
-            <!-- The heart here is a Unicode character.  I tried to embed it using
-              the Hex code, but it didn't work for some reason, but Atom took the
-              character no problem on a copy-and-paste from unicode-table.com -->
-            <!-- <small>❤ {{ post.likes }}</small>
+          <div class="col-2 text-danger">
+            <!-- The heart here is a Unicode character.  I tried to embed it
+            using the Hex code, but it didn't work for some reason, but Atom
+            took the character no problem on a copy-and-paste from
+            unicode-table.com -->
+            <small>❤ {{ post.likes }}</small>
           </div>
         </div>
-      {% endfor %}  -->
+      {% endfor %}
     </div>
   </body>
 </html>
