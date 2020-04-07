@@ -3,15 +3,21 @@
 
 from django.http import HttpResponse
 from django.views import View
+from django.shortcuts import render
 # Add my models
 from .models import Post, Following, Profile
 # These are needed for user authentication and persistence
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import AuthenticationForm
 
 class IndexView(View):
     def get(self, request):
-        return HttpResponse('IndexView Get')
+        form = AuthenticationForm()
+        context = {
+            'form': form,
+        }
+        return render(request, 'posts/index.html', context)
     def post(self, request):
         return HttpResponse('IndexView Post')
 
