@@ -12,6 +12,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 
 class IndexView(View):
+
     def get(self, request):
         form = AuthenticationForm()
         context = {
@@ -19,7 +20,17 @@ class IndexView(View):
         }
         return render(request, 'posts/index.html', context)
     def post(self, request):
-        return HttpResponse('IndexView Post')
+        form = AuthenticationForm(data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(username = username, password = password)
+            if userAuth is not None:
+                login(request, user = user)
+        context = {
+            'form': form,
+        }
+        return render(request, 'posts/index.html', context)
 
 class UsernameView(View):
     def get(self, request, username):
