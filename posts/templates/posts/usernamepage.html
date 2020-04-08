@@ -23,29 +23,30 @@
   <body bgcolor="#111144">
     <!-- Bootstrap wants everything in some kind of container. -->
     <div class="container">
+      {%if me %}
+        <!-- I'm using a pagination nav from Bootstrap to switch views. -->
+        <nav>
 
-      <!-- I'm using a pagination nav from Bootstrap to switch views. -->
-      <nav>
+          <!-- I made it large, and centered left-to-right (see avatar below). -->
+          <ul class="pagination pagination-lg justify-content-center">
 
-        <!-- I made it large, and centered left-to-right (see avatar below). -->
-        <ul class="pagination pagination-lg justify-content-center">
+            <!-- There are only two options, posts my this user only, -->
+            <li class="page-item">
+              <a class="page-link" href="{% url 'username' me.username %}">My Posts</a>
+            </li>
 
-          <!-- There are only two options, posts my this user only, -->
-          <li class="page-item">
-            <a class="page-link" href="">My Posts</a>
-          </li>
-
-          <!-- or posts by whoever this user follows. -->
-          <li class="page-item border-dark">
-            <a class="page-link" href="{% url 'followed' thisUser.username %}">My Feed</a>
-          </li>
-        </ul>
-      </nav>
+            <!-- or posts by whoever this user follows. -->
+            <li class="page-item border-dark">
+              <a class="page-link" href="{% url 'followed' me.username %}">My Feed</a>
+            </li>
+          </ul>
+        </nav>
+      {% endif %}
 
       <!-- This section sets up a form where a user can make a new post. -->
       <div class="row border border-dark">
         <div class="col">
-          {% if thisUser %}
+          {% if me.username == thisUser.username %}
             <form action="{% url 'username' thisUser.username %}"
               method="POST">
               {% csrf_token %}
@@ -63,7 +64,15 @@
               </div>
             </form>
           {% else %}
-            <p>Log in to post.</p>
+            {% if me %}
+              <a href="{% url 'username' me.username %}">
+                <button class="btn btn-info">
+                  Go To My Home Page
+                </button>
+              </a>
+            {% else %}
+              <p>Log in to post.</p>
+            {% endif %}
           {% endif %}
         </div>
       </div>

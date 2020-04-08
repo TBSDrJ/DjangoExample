@@ -67,7 +67,8 @@ class UsernameView(View):
             form = PostForm()
             context = {
                 'form': form,
-                'thisUser': request.user,
+                'me': request.user,
+                'thisUser': thisUser,
                 'thisUsersPosts': thisUsersPosts,
             }
             return render(request, 'posts/usernamepage.html', context)
@@ -75,7 +76,12 @@ class UsernameView(View):
             if request.user.is_authenticated:
                 # If we're here, we have an authenticated user but
                 # not at their own home page
-                print('Authenticated user, not home')
+                context = {
+                    'me': request.user,
+                    'thisUser': thisUser,
+                    'thisUsersPosts': thisUsersPosts,
+                }
+                return render(request, 'posts/usernamepage.html', context)
             else:
                 # If we're here, we have non-authenticated user
                 print('Not an authenticated user.')
