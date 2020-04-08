@@ -56,6 +56,17 @@ class IndexView(View):
 
 class UsernameView(View):
     def get(self, request, username):
+        if request.user.username == username:
+            # If we're here, the user is on their own page.
+            print('Authenticated user, home page')
+        else:
+            if request.user.is_authenticated:
+                # If we're here, we have an authenticated user but
+                # not at their own home page
+                print('Authenticated user, not home')
+            else:
+                # If we're here, we have non-authenticated user
+                print('Not an authenticated user.')
         return HttpResponse('UsernameView Get')
     def post(self, request, username):
         return HttpResponse('UsernameView Post')
