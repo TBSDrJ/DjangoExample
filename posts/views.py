@@ -12,27 +12,46 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 
 class IndexView(View):
+    # All posts will appear in all versions of the IndexView, so make it
+    #   available to the entire class.
     allPosts = Post.objects.order_by("-pubDate")
 
     def get(self, request):
+        # We'll use the built-in authenticaion form
         form = AuthenticationForm()
+        # Send the template the form and the posts.
         context = {
             'form': form,
             'allPosts': self.allPosts,
+            'user': request.user,
         }
         return render(request, 'posts/index.html', context)
+
     def post(self, request):
-        form = AuthenticationForm(data=request.POST)
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            user = authenticate(username = username, password = password)
-            if userAuth is not None:
-                login(request, user = user)
+        # First check if we are coming here after hitting 'Logout'
+        if 'logout' in request.POST.keys():
+            # Then log out
+            logout(request)
+            # We load an empty form with no data
+            form = AuthenticationForm()
+        else:
+            # We're if we got her after hitting 'Login'
+            # So we match up the data with the form fields
+            form = AuthenticationForm(data=request.POST)
+            # Validate and clean the data
+            if form.is_valid():
+                username = form.cleaned_data['username']
+                password = form.cleaned_data['password']
+                # Then authenticate and log in.
+                user = authenticate(username = username, password = password)
+                if user is not None:
+                    login(request, user = user)
+        # Set up the data for the template
         context = {
             'form': form,
             'allPosts': self.allPosts,
         }
+        # And send to template
         return render(request, 'posts/index.html', context)
 
 class UsernameView(View):

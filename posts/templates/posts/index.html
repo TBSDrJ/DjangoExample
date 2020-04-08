@@ -26,27 +26,27 @@
       <!-- Here, we check if someone is logged in or not.  I created the
         'loggedIn' variable as a Boolean flag: it is easy to check in Python,
         a little less obvious how to do so in the HTML template.  -->
-      <!-- {% if loggedIn %} -->
+      {% if user.is_authenticated %}
 
         <!-- If someone is logged in, we welocme them and give them <thead>
           opportunity to log out. -->
-        <!-- <h3>Welcome, {{ user.first_name }} {{ user.last_name }}</h3> -->
+        <h3>Welcome, {{ user.first_name }} {{ user.last_name }}</h3>
 
         <!-- Use POST for sure any time you are dealing with login/logout info.
           In general, you should use POST unless you have a good reason not to.
           The main reason to use GET instead is if you want the input data to be
           transfereable in the URL; GET puts all data submissions in the URL. -->
-        <!-- <form style="padding-bottom:1em;" method="POST"> -->
+        <form style="padding-bottom:1em;" method="POST">
           <!-- Every <form> element needs a csrf_token as a security precaution. -->
-          <!-- {% csrf_token %} -->
+          {% csrf_token %}
           <!-- I use the hidden input element to send along the information that
             we are logging out. -->
-          <!-- <input type="hidden" name="logout" value="logout"></input> -->
-          <!-- <button type="submit" class="btn btn-danger">Logout</button> -->
-        <!-- </form> -->
+          <input type="hidden" name="logout" value="logout"></input>
+          <button type="submit" class="btn btn-danger">Logout</button>
+        </form>
 
       <!-- If no user is logged in, give them a chance to do so. -->
-      <!-- {% else %} -->
+      {% else %}
 
         <!-- Again, use POST method, and include a csrf_token -->
         <form style="padding-bottom:1em;" method="POST">
@@ -61,7 +61,7 @@
             <input> elements with type="submit" -->
           <button type="submit" class="btn btn-danger">Login</button>
         </form>
-      <!-- {% endif %} -->
+      {% endif %}
       <!-- End login/logout section. -->
 
       <!-- I decided to just dump all posts onto the screen here. -->
