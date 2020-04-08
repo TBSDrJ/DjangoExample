@@ -11,6 +11,7 @@ from .forms import PostForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
+from django.utils import timezone
 
 class IndexView(View):
     # All posts will appear in all versions of the IndexView, so make it
@@ -82,6 +83,13 @@ class UsernameView(View):
                 # If we're here, we have non-authenticated user
                 return render(request, 'posts/usernamepage.html', self.context)
     def post(self, request, username):
+        if request.user.is_authenticated:
+            newPost = Post(
+                userPosted = request.user,
+                postText = request.POST['postText'],
+                pubDate = timezone.now(),
+            )
+            newPost.save()
         return self.get(request, username)
 
 class FollowedView(View):
