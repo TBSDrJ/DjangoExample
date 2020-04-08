@@ -56,41 +56,33 @@ class IndexView(View):
         return render(request, 'posts/index.html', context)
 
 class UsernameView(View):
+    context = {}
+
     def get(self, request, username):
         # Need to track down the User object before getting Posts
         thisUser = User.objects.get(username = username)
         # I've layered on both a filter and a sort on this query
         thisUsersPosts = Post.objects.filter(
             userPosted = thisUser).order_by('-pubDate')
+        self.context['thisUser'] = thisUser
+        self.context['thisUsersPosts'] = thisUsersPosts
         if request.user.username == username:
             # If we're here, the user is on their own page.
             form = PostForm()
-            context = {
-                'form': form,
-                'me': request.user,
-                'thisUser': thisUser,
-                'thisUsersPosts': thisUsersPosts,
-            }
-            return render(request, 'posts/usernamepage.html', context)
+            self.context['me'] = request.user
+            self.context['form'] = form
+            return render(request, 'posts/usernamepage.html', self.context)
         else:
             if request.user.is_authenticated:
                 # If we're here, we have an authenticated user but
                 # not at their own home page
-                context = {
-                    'me': request.user,
-                    'thisUser': thisUser,
-                    'thisUsersPosts': thisUsersPosts,
-                }
-                return render(request, 'posts/usernamepage.html', context)
+                self.context['me'] = request.user
+                return render(request, 'posts/usernamepage.html', self.context)
             else:
                 # If we're here, we have non-authenticated user
-                context = {
-                    'thisUser': thisUser,
-                    'thisUsersPosts': thisUsersPosts,
-                }
-                return render(request, 'posts/usernamepage.html', context)
+                return render(request, 'posts/usernamepage.html', self.context)
     def post(self, request, username):
-        return HttpResponse('UsernameView Post')
+        return self.get(request, username)
 
 class FollowedView(View):
     def get(self, request, username):
