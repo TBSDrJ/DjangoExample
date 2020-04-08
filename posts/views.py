@@ -84,8 +84,11 @@ class UsernameView(View):
                 return render(request, 'posts/usernamepage.html', context)
             else:
                 # If we're here, we have non-authenticated user
-                print('Not an authenticated user.')
-        return HttpResponse('UsernameView Get')
+                context = {
+                    'thisUser': thisUser,
+                    'thisUsersPosts': thisUsersPosts,
+                }
+                return render(request, 'posts/usernamepage.html', context)
     def post(self, request, username):
         return HttpResponse('UsernameView Post')
 

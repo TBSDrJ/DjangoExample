@@ -71,7 +71,11 @@
                 </button>
               </a>
             {% else %}
-              <p>Log in to post.</p>
+            <a href="{% url 'index' %}">
+              <button class="btn btn-danger">
+                Log In to Post.
+              </button>
+            </a>
             {% endif %}
           {% endif %}
         </div>
