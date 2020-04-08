@@ -93,7 +93,40 @@ class UsernameView(View):
         return self.get(request, username)
 
 class FollowedView(View):
+    def get_followed(self, username):
+        follower = User.objects.get(username = username)
+        entries = Following.objects.filter(follower = follower)
+        followed = []
+        for entry in entries:
+            followed.append(entry.followed)
+        return followed
+
     def get(self, request, username):
-        return HttpResponse('FollowedView Get')
+        if request.user.is_authenticated:
+            if request.user.username == username:
+                followed = self.get_followed(username)
+                followedPosts = []
+                for user in followed:
+                    followedPosts += Post.objects.filter(userPosted = user)
+                followedPosts = sorted(
+                    followedPosts,
+                    key=lambda post: post.pubDate,
+                    reverse = True
+                )
+                print(followedPosts)
+                return HttpResponse('Blah')
+            else:
+                return HttpResponse(
+                    'You do not have permission to view this page.'
+                )
+        else:
+            return HttpResponse(
+                'You do not have permission to view this page.'
+            )
     def post(self, request, username):
-        return HttpResponse('FollowedViewPost')
+        if request.user.is_authenticated:
+            pass
+        else:
+            return HttpResponse(
+                'You do not have permission to view this page.'
+            )
