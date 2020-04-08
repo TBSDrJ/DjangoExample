@@ -4,8 +4,9 @@
 from django.http import HttpResponse
 from django.views import View
 from django.shortcuts import render
-# Add my models
+# Add my models and my forms
 from .models import Post, Following, Profile
+from .forms import PostForm
 # These are needed for user authentication and persistence
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -58,7 +59,13 @@ class UsernameView(View):
     def get(self, request, username):
         if request.user.username == username:
             # If we're here, the user is on their own page.
+            form = PostForm()
+            context = {
+                'form': form,
+                'thisUser': request.user,
+            }
             print('Authenticated user, home page')
+            return render(request, 'posts/usernamepage.html', context)
         else:
             if request.user.is_authenticated:
                 # If we're here, we have an authenticated user but

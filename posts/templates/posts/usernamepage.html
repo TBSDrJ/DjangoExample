@@ -37,7 +37,7 @@
 
           <!-- or posts by whoever this user follows. -->
           <li class="page-item border-dark">
-            <a class="page-link" href="{% url 'followed' username %}">My Feed</a>
+            <a class="page-link" href="{% url 'followed' thisUser.username %}">My Feed</a>
           </li>
         </ul>
       </nav>
@@ -45,29 +45,30 @@
       <!-- Thi section sets up a form where a user can make a new post. -->
       <div class="row border border-dark">
         <div class="col">
-          {% if user %}
-          <form action="{% url 'usernamepage' username %}" method="POST">
-            {% csrf_token %}
-            <div class="form-group">
-              <div class="col-8">
-                <label for="newPostText">Add a New Post!</label>
-                <textarea class="form-control" rows="4" name="newPostText"></textarea>
+          {% if thisUser %}
+            <form action="{% url 'username' thisUser.username %}"
+              method="POST">
+              {% csrf_token %}
+              <table>
+                {{ form }}
+              </table>
+              <div class="form-group">
+                <div class="col-12">
+                  <input type="hidden" name="userPosting"
+                    value="{{ thisUser.username }}" />
+                  <button type="submit" class="btn btn-success">
+                    Submit New Post
+                  </button>
+                </div>
               </div>
-            </div>
-            <div class="form-group">
-              <div class="col-12">
-                <input type="hidden" name="userPosting" value="{{ username }}" />
-                <button type="submit" class="btn btn-success">Submit New Post</button>
-              </div>
-            </div>
-          </form>
+            </form>
           {% else %}
             <p>Log in to post.</p>
           {% endif %}
         </div>
       </div>
 
-      {% if latestPosts %}
+      <!-- {% if latestPosts %}
         {% for post in latestPosts %}
           <div class="row border border-dark">
             <div class="d-flex col-1 align-items-center justify-content-center" align=center><img src="{% static 'posts/DrJAvatar.png' %}" height=50/></div>
@@ -88,7 +89,7 @@
         <div class="row">
           <div class="col">Sorry, no posts available.</div>
         </div>
-      {% endif %}
+      {% endif %} -->
     </div>
   </body>
 </html
