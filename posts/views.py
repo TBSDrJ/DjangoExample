@@ -57,14 +57,19 @@ class IndexView(View):
 
 class UsernameView(View):
     def get(self, request, username):
+        # Need to track down the User object before getting Posts
+        thisUser = User.objects.get(username = username)
+        # I've layered on both a filter and a sort on this query
+        thisUsersPosts = Post.objects.filter(
+            userPosted = thisUser).order_by('-pubDate')
         if request.user.username == username:
             # If we're here, the user is on their own page.
             form = PostForm()
             context = {
                 'form': form,
                 'thisUser': request.user,
+                'thisUsersPosts': thisUsersPosts,
             }
-            print('Authenticated user, home page')
             return render(request, 'posts/usernamepage.html', context)
         else:
             if request.user.is_authenticated:

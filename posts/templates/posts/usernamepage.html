@@ -42,7 +42,7 @@
         </ul>
       </nav>
 
-      <!-- Thi section sets up a form where a user can make a new post. -->
+      <!-- This section sets up a form where a user can make a new post. -->
       <div class="row border border-dark">
         <div class="col">
           {% if thisUser %}
@@ -68,12 +68,12 @@
         </div>
       </div>
 
-      <!-- {% if latestPosts %}
-        {% for post in latestPosts %}
+      {% if thisUsersPosts %}
+        {% for post in thisUsersPosts %}
           <div class="row border border-dark">
             <div class="d-flex col-1 align-items-center justify-content-center" align=center><img src="{% static 'posts/DrJAvatar.png' %}" height=50/></div>
             <div class="col-11 font-weight-bold bg-warning text-primary">
-              {{ firstName }} {{ lastName }}
+              {{ post.userPosted.first_name }} {{ post.userPosted.last_name }}
               <div class="row">
                 <div class="col-1">&nbsp;</div>
                 <div class="col-11 font-weight-normal text-dark">{{ post.postText }}</div>
@@ -89,7 +89,7 @@
         <div class="row">
           <div class="col">Sorry, no posts available.</div>
         </div>
-      {% endif %} -->
+      {% endif %}
     </div>
   </body>
 </html
