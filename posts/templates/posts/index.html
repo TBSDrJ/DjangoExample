@@ -44,6 +44,10 @@
           <input type="hidden" name="logout" value="logout"></input>
           <button type="submit" class="btn btn-danger">Logout</button>
         </form>
+        <!-- Create a button that will take this user to their home page. -->
+        <a href="{% url 'username' user.username %}">
+          <button class="btn btn-info">Go To My Home</button>
+        </a>
 
       <!-- If no user is logged in, give them a chance to do so. -->
       {% else %}
